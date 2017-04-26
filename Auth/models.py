@@ -17,7 +17,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     token = models.CharField(max_length=50)
     type = models.IntegerField()
-    birth_date = models.DateField(null=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message="Phone number must be entered in the format: '+77021112233'. Up to 15 digits allowed.")
     phone_number = models.CharField(max_length=15,validators=[phone_regex], blank=True)

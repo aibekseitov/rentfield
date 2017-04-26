@@ -23,3 +23,8 @@ class TimetableSerializer(ModelSerializer):
     class Meta:
         model = Timetable
         fields = '__all__'
+
+class LikeSerializer(ModelSerializer):
+    class Meta:
+        model = Field
+        fields = ('id','likes')

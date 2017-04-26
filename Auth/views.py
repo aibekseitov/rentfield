@@ -1,3 +1,4 @@
+from django.contrib import auth
 from rest_framework import status
 from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny, IsAdminUser, SAFE_METHODS, IsAuthenticated
@@ -21,6 +22,7 @@ class UserViewSet(ModelViewSet):
         Доступна только для администратора Django
     """
     queryset = User.objects.all()
+
     permission_classes = [AllowAny]
 
     def get_serializer_class(self, *args, **kwargs):
@@ -30,6 +32,28 @@ class UserViewSet(ModelViewSet):
         if self.request.method in SAFE_METHODS:
             return UserReadSerializer
         return UserWriteSerializer
+
+    @list_route(methods=["post"], permission_classes=[AllowAny])
+    def authenticate(self, request):
+        username = request.data['username']
+        password = request.data['password']
+        user = auth.authenticate(username=username,password=password)
+        if user is not None:
+            return Response(status=status.HTTP_200_OK, data={'detail':'Successfully authenticated.'})
+
+        return Response(status=status.HTTP_403_FORBIDDEN, data={'detail':'Invalid username/password.'})
+
+    '''
+    @list_route(methods=["post"], permission_classes=[AllowAny])
+    def is_online(self, request):
+        print(str(request.user))
+    '''
+
+    @list_route(methods=["post"], permission_classes=[AllowAny])
+    def logout(self, request):
+        print(request.user.is_authenticated)
+        auth.logout(request)
+        return Response(status=status.HTTP_200_OK, data={'detail': 'User is successfully logged out.'})
 
     @list_route(methods=["get"], permission_classes=[IsAuthenticated])
     def get_token(self,request):

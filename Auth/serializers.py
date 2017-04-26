@@ -12,12 +12,12 @@ class ProfileReadSerializer(ModelSerializer):
 class ProfileWriteSerializer(ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('type','birth_date','phone_number','email')
+        fields = ('type','phone_number','email')
 
 class ProfileUpdateSerializer(ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('birth_date','phone_number','email')
+        fields = ('phone_number','email')
 
 class UserReadSerializer(ModelSerializer):
     class Meta:
@@ -37,7 +37,6 @@ class UserWriteSerializer(ModelSerializer):
         user.save()
 
         token = uuid.uuid4()
-        print(token)
         Profile.objects.create(user=user, token=token, **profile)
         return user
 
@@ -45,7 +44,6 @@ class UserWriteSerializer(ModelSerializer):
         """
         Update and return an existing `Snippet` instance, given the validated data.
         """
-        instance.birth_date = validated_data.get('birth_date', instance.birth_date)
         instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         instance.email = validated_data.get('email', instance.email)
         instance.save()
